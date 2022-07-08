@@ -17,3 +17,9 @@ export const seKey = '0z9mHguI53wsnmgPMUFN6A((';
  * Default maximum number of questions to fetch per request
  */
 export const defaultPageSize = 500;
+
+/**
+ * Regex for matching stackoverflow question url
+ * it encapsulates the question id in a regex group to be extracted
+ */
+export const questionUrlRegex = new RegExp("^https://stackoverflow.com/questions/([^/]+)/[^/]+");

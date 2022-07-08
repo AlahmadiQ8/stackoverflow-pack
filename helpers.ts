@@ -21,15 +21,13 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
   return response.body.items[0];
 }
 
-const questionUrlRegex = new RegExp("^https://stackoverflow.com/questions/([^/]+)/[^/]+");
-
 /**
  * extracts question id from stackoverflow url
  * @param url stackoverflow url
  * @returns object containing question id
  */
 function parseQuestionUrl(url: string): { id: string } {
-  let match = url.match(questionUrlRegex);
+  let match = url.match(constants.questionUrlRegex);
   if (!match) {
     throw new coda.UserVisibleError("Invalid question URL: " + url);
   }

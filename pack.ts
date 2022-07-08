@@ -1,6 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 import { getQuestion } from "./helpers";
 import { questionSchema } from "./schemas";
+import * as constants from './constants';
 
 export const pack = coda.newPack();
 
@@ -19,15 +20,24 @@ pack.setUserAuthentication({
 
 pack.addFormula({
   name: "Question",
-  description: "Get information about a repo from it's URL.",
+  description: "Get information about a question from it's URL.",
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: "url",
-      description: "The Url of the question",
+      description: "The url of the question",
     }),
   ],
   resultType: coda.ValueType.Object,
   schema: questionSchema,
   execute: getQuestion
 });
+
+pack.addColumnFormat({
+  name: 'Question',
+  instructions: 'Show details about a stackoverflow question, given a URL',
+  formulaName: 'Question',
+  matchers: [
+    constants.questionUrlRegex
+  ]
+})
