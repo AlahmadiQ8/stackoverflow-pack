@@ -14,5 +14,5 @@ export const questionSchema = coda.makeObjectSchema({
   },
   displayProperty: "title",
   idProperty: "question_id",
-  featuredProperties: ["title", "link", "view_count"],
+  featuredProperties: ["link", "view_count"],
 });

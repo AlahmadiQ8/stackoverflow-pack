@@ -22,6 +22,9 @@ npx coda auth path/to/pack.ts
 ```bash
 # Formula: Question
 npx coda execute pack.ts Question https://stackoverflow.com/questions/72913818/how-to-access-my-sprite-properties-from-outside-a-function-in-phaser3-and-matter
+
+# Sync Table: 
+npx coda execute pack.ts Questions "2021-01-01" "" "nextjs;react;git"
 ```
 
 ## Uploading the pack
