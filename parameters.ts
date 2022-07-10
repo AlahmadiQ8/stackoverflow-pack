@@ -11,7 +11,7 @@ export const dateRange = coda.makeParameter({
 
 export const tagsParameter = coda.makeParameter({
   type: coda.ParameterType.String,
-  name: 'IncludeTag',
+  name: 'AddTagFilter',
   description: 'Filter result by tag.',
   optional: false,
   autocomplete: fetchTagsForAutocomplete
@@ -19,10 +19,18 @@ export const tagsParameter = coda.makeParameter({
 
 export const anotherTagsParameter = coda.makeParameter({
   type: coda.ParameterType.String,
-  name: 'IncludeAnotherTag',
+  name: 'AddAnotherTagFilter',
   description: 'Add more tags to filter and further narrow results',
   optional: true,
   autocomplete: fetchTagsForAutocomplete
+})
+
+export const includeQuestionBody = coda.makeParameter({
+  type: coda.ParameterType.Boolean,
+  name: "IncludeQuestionBody",
+  description: "Whether to fetch question body or not. Becareful, enabling it results in expensive network calls",
+  optional: false,
+  suggestedValue: false
 })
 
 async function fetchTagsForAutocomplete(context: coda.ExecutionContext, search: string) {

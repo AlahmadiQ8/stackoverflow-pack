@@ -14,9 +14,10 @@ const commonQueryParams = {
 /**
  * Fetch questions given certain filters
  */
-export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQueryParameters, context: coda.SyncExecutionContext) {
+export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQueryParameters, context: coda.SyncExecutionContext, includeQuestionBody: boolean = false) {
   const url = coda.withQueryParams('https://api.stackexchange.com/2.2/questions', {
     ...commonQueryParams, 
+    ...(includeQuestionBody && { filter: constants.filterWithQuestionBody }),
     page, 
     pagesize: constants.defaultPageSize,
     ...(fromDate && { fromDate: toEpochTime(fromDate) }),

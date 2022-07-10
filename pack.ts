@@ -2,7 +2,7 @@ import * as coda from "@codahq/packs-sdk";
 import { getQuestion, getQuestions } from "./helpers";
 import { questionSchema } from "./schemas";
 import * as constants from './constants';
-import { anotherTagsParameter, dateRange, tagsParameter } from "./parameters";
+import { anotherTagsParameter, dateRange, includeQuestionBody, tagsParameter } from "./parameters";
 
 export const pack = coda.newPack();
 
@@ -55,13 +55,14 @@ pack.addSyncTable({
     description: "Sync Questions",
     parameters: [
       dateRange,
+      includeQuestionBody,
       tagsParameter,
       anotherTagsParameter
     ],
-    execute: async ([dateRange, tag, anotherTag], context) => {
+    execute: async ([dateRange, includeMarkdownBody, tag, anotherTag], context) => {
       let page = (context.sync.continuation?.page as number) || 1;
       const tagsFilter = [tag, anotherTag].join(';');
-      let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, context);
+      let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, context, includeMarkdownBody);
       const questions = response.body.items;
       let continuation;
       if (response.body.has_more) {
