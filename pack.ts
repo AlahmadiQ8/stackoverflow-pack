@@ -1,8 +1,8 @@
 import * as coda from "@codahq/packs-sdk";
 import { bookmarkQuestion, getQuestion, getQuestions, undoBookmarkQuestion } from "./helpers";
-import { questionSchema } from "./schemas";
+import { QuestionSchema } from "./schemas";
 import * as constants from './constants';
-import { anotherTagsParameter, dateRange, includeQuestionBody, tagsParameter } from "./parameters";
+import { dateRange, includeQuestionBody, tagsListParameter, tagsParameter } from "./parameters";
 
 export const pack = coda.newPack();
 
@@ -31,9 +31,23 @@ pack.addFormula({
     }),
   ],
   resultType: coda.ValueType.Object,
-  schema: questionSchema,
+  schema: QuestionSchema,
   execute: getQuestion
 });
+
+// Adds Formula to find popular tags via autocomplete
+pack.addFormula({
+  name: "FindTags",
+  description: "Search popular tags. Returns list of tags.",
+  parameters: [],
+  varargParameters: [ tagsParameter ],
+  resultType: coda.ValueType.Array,
+  items: { type: coda.ValueType.String },
+  execute: async ([...tags]) => {
+    return tags as string[];
+  },
+  connectionRequirement: coda.ConnectionRequirement.Optional 
+})
 
 // Column format for Question formula
 pack.addColumnFormat({
@@ -58,8 +72,7 @@ pack.addFormula({
   ],
   isAction: true,
   resultType: coda.ValueType.Object,
-  schema: coda.withIdentity(questionSchema, 'Question'),
-  // schema: {...questionSchema, identity: { name: "Question", packId: 12829 }},
+  schema: coda.withIdentity(QuestionSchema, 'Question'),
   extraOAuthScopes: ['write_access'],
   execute: bookmarkQuestion
 });
@@ -77,8 +90,7 @@ pack.addFormula({
   ],
   isAction: true,
   resultType: coda.ValueType.Object,
-  schema: coda.withIdentity(questionSchema, 'Question'),
-  // schema: {...questionSchema, identity: { name: "Question", packId: 12829 }},
+  schema: coda.withIdentity(QuestionSchema, 'Question'),
   extraOAuthScopes: ['write_access'],
   execute: undoBookmarkQuestion
 });
@@ -86,7 +98,7 @@ pack.addFormula({
 // Adds sync table to get all questions. Better to use filters to limit results
 pack.addSyncTable({
   name: "Questions",
-  schema: questionSchema,
+  schema: QuestionSchema,
   identityName: "Question",
   formula: {
     name: "SyncQuestions",
@@ -94,12 +106,11 @@ pack.addSyncTable({
     parameters: [
       dateRange,
       includeQuestionBody,
-      tagsParameter,
-      anotherTagsParameter
+      tagsListParameter,
     ],
-    execute: async ([dateRange, includeMarkdownBody, tag, anotherTag], context) => {
+    execute: async ([dateRange, includeMarkdownBody, tags], context) => {
       let page = (context.sync.continuation?.page as number) || 1;
-      const tagsFilter = [tag, anotherTag].join(';');
+      const tagsFilter = tags.join(';');
       let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, context, includeMarkdownBody);
       const questions = response.body.items;
       let continuation;

@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
 
-export const questionSchema = coda.makeObjectSchema({
+export const QuestionSchema = coda.makeObjectSchema({
   properties: {
     question_id: { type: coda.ValueType.Number, required: true },
     title: { type: coda.ValueType.String, required: true  },

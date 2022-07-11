@@ -9,28 +9,25 @@ export const dateRange = coda.makeParameter({
   optional: false,
 })
 
-export const tagsParameter = coda.makeParameter({
-  type: coda.ParameterType.String,
-  name: 'AddTagFilter',
-  description: 'Filter result by tag.',
-  optional: false,
-  autocomplete: fetchTagsForAutocomplete
-})
-
-export const anotherTagsParameter = coda.makeParameter({
-  type: coda.ParameterType.String,
-  name: 'AddAnotherTagFilter',
-  description: 'Add more tags to filter and further narrow results',
-  optional: true,
-  autocomplete: fetchTagsForAutocomplete
-})
-
 export const includeQuestionBody = coda.makeParameter({
   type: coda.ParameterType.Boolean,
   name: "IncludeQuestionBody",
   description: "Whether to fetch question body or not. Becareful, enabling it results in expensive network calls",
   optional: false,
   suggestedValue: false
+})
+
+export const tagsParameter = coda.makeParameter({
+  type: coda.ParameterType.String,
+  name: 'Tag',
+  description: 'A tag',
+  autocomplete: fetchTagsForAutocomplete
+})
+
+export const tagsListParameter = coda.makeParameter({
+  type: coda.ParameterType.StringArray,
+  name: 'TagsList',
+  description:'Tags to filter. use `FindTags()` formula to find popular tags'
 })
 
 async function fetchTagsForAutocomplete(context: coda.ExecutionContext, search: string) {

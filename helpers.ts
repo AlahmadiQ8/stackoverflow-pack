@@ -66,7 +66,8 @@ export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
 
   const question = response.body.items[0]; 
 
-  // Reponse doesn't include question_id which is required to sync table row. So we must add it
+  // Reponse doesn't include question_id which is required to sync table row. 
+  // this is because we set the idProperty in QuestionSchema to question_id.
   return {...question, question_id: id};
 }
 
@@ -90,7 +91,8 @@ export async function undoBookmarkQuestion([url], context: coda.ExecutionContext
 
   const question = response.body.items[0]; 
 
-  // Reponse doesn't include question_id which is required to sync table row. So we must add it
+  // Reponse doesn't include question_id which is required to sync table row.
+  // this is because we set the idProperty in QuestionSchema to question_id.
   return {...question, question_id: id};
 }
 
