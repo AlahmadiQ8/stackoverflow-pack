@@ -1,6 +1,8 @@
 # Stackoverflow Coda Pack
 
-## Local Development in Docker Container
+## Contributing
+
+### Local Development in Docker Container
 
 The easiest way to develop locally is to use the development docker container.
 
@@ -9,7 +11,6 @@ The easiest way to develop locally is to use the development docker container.
 
 A new VSCode window will launch where you can run both 
 
-## Prerequisites
 
 ### Setup Stackoverflow Authentication 
 
@@ -17,7 +18,7 @@ A new VSCode window will launch where you can run both
 npx coda auth path/to/pack.ts
 ```
 
-## Running Commands Locally
+### Running Commands Locally
 
 ```bash
 # Formula: Question
@@ -33,6 +34,6 @@ npx coda execute pack.ts BookmarkQuestion "https://stackoverflow.com/questions/7
 npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
 ```
 
-## Uploading the pack
+### Uploading the pack
 
 See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/latest/guides/development/cli/#upload
