@@ -23,8 +23,14 @@ npx coda auth path/to/pack.ts
 # Formula: Question
 npx coda execute pack.ts Question https://stackoverflow.com/questions/72913818/how-to-access-my-sprite-properties-from-outside-a-function-in-phaser3-and-matter
 
-# Sync Table: 
-npx coda execute pack.ts Questions "2021-01-01" "" "nextjs;react;git"
+# Sync Table:
+npx coda execute pack.ts Questions "2022-02-01,2022-05-01" "false" "reactjs" "nextjs"
+
+# Bookmark Question
+npx coda execute pack.ts BookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
+
+# Undo Bookmark Question
+npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
 ```
 
 ## Uploading the pack

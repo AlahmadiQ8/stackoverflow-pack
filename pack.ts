@@ -1,5 +1,5 @@
 import * as coda from "@codahq/packs-sdk";
-import { getQuestion, getQuestions } from "./helpers";
+import { bookmarkQuestion, getQuestion, getQuestions, undoBookmarkQuestion } from "./helpers";
 import { questionSchema } from "./schemas";
 import * as constants from './constants';
 import { anotherTagsParameter, dateRange, includeQuestionBody, tagsParameter } from "./parameters";
@@ -16,7 +16,7 @@ pack.setUserAuthentication({
   authorizationUrl: "https://stackoverflow.com/oauth",
   tokenUrl: "https://stackoverflow.com/oauth/access_token/json",
   scopes: ["read_inbox", "no_expiry", "private_info"],
-  tokenQueryParam: "access_token",
+  tokenQueryParam: "access_token", 
 });
 
 // Adds Formula to  get information about a single question via url
@@ -43,6 +43,44 @@ pack.addColumnFormat({
   matchers: [
     constants.questionUrlRegex
   ]
+});
+
+// Action to bookmark a question
+pack.addFormula({
+  name: 'BookmarkQuestion',
+  description: 'Bookmark (previously known as favorite) given question url to your account.',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "url",
+      description: "The url of the question",
+    }),
+  ],
+  isAction: true,
+  resultType: coda.ValueType.Object,
+  schema: coda.withIdentity(questionSchema, 'Question'),
+  // schema: {...questionSchema, identity: { name: "Question", packId: 12829 }},
+  extraOAuthScopes: ['write_access'],
+  execute: bookmarkQuestion
+});
+
+// Action to remove question from bookmarks
+pack.addFormula({
+  name: 'UndoBookmarkQuestion',
+  description: 'Undo bookmark (previously known as favorite) for a given question url.',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "url",
+      description: "The url of the question",
+    }),
+  ],
+  isAction: true,
+  resultType: coda.ValueType.Object,
+  schema: coda.withIdentity(questionSchema, 'Question'),
+  // schema: {...questionSchema, identity: { name: "Question", packId: 12829 }},
+  extraOAuthScopes: ['write_access'],
+  execute: undoBookmarkQuestion
 });
 
 // Adds sync table to get all questions. Better to use filters to limit results

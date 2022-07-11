@@ -5,7 +5,7 @@ import { QuestionsResponse, SeContinuation, SeFilterQueryParameters, TagsRespons
 /**
  * Mandatory query params to all api requests
  */
-const commonQueryParams = {
+const commonParams = {
   filter: constants.filter,
   site: 'stackoverflow',
   key: constants.seKey,
@@ -16,7 +16,7 @@ const commonQueryParams = {
  */
 export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQueryParameters, context: coda.SyncExecutionContext, includeQuestionBody: boolean = false) {
   const url = coda.withQueryParams('https://api.stackexchange.com/2.2/questions', {
-    ...commonQueryParams, 
+    ...commonParams, 
     ...(includeQuestionBody && { filter: constants.filterWithQuestionBody }),
     page, 
     pagesize: constants.defaultPageSize,
@@ -40,10 +40,58 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
   const { id } = parseQuestionUrl(url);
   const response = await context.fetcher.fetch<QuestionsResponse>({
     method: 'GET',
-    url: coda.withQueryParams(`https://api.stackexchange.com/2.2/questions/${id}`, commonQueryParams)
+    url: coda.withQueryParams(`https://api.stackexchange.com/2.2/questions/${id}`, commonParams)
   });
 
   return response.body.items[0];
+}
+
+/**
+ * Boomarks a given question via url
+ */
+export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
+  const { id } = parseQuestionUrl(url);
+
+  let response;
+  try {
+    response = await context.fetcher.fetch<QuestionsResponse>({
+      method: 'POST',
+      url: `https://api.stackexchange.com/2.3/questions/${id}/favorite`,
+      // We have to do this to bypass TS type checking https://stackoverflow.com/a/67219058/5431968
+      form: commonParams
+    });
+  } catch (error) {
+    ensureNoneErrorStatusCode(error);
+  }
+
+  const question = response.body.items[0]; 
+
+  // Reponse doesn't include question_id which is required to sync table row. So we must add it
+  return {...question, question_id: id};
+}
+
+/**
+ * Remove boomark a given question via url
+ */
+export async function undoBookmarkQuestion([url], context: coda.ExecutionContext) {
+  const { id } = parseQuestionUrl(url);
+
+  let response;
+  try {
+    response = await context.fetcher.fetch<QuestionsResponse>({
+      method: 'POST',
+      url: `https://api.stackexchange.com/2.3/questions/${id}/favorite/undo`,
+      // We have to do this to bypass TS type checking https://stackoverflow.com/a/67219058/5431968
+      form: commonParams
+    });
+  } catch (error) {
+    ensureNoneErrorStatusCode(error);
+  }
+
+  const question = response.body.items[0]; 
+
+  // Reponse doesn't include question_id which is required to sync table row. So we must add it
+  return {...question, question_id: id};
 }
 
 /**
@@ -53,7 +101,7 @@ export async function getUserTags(context: coda.ExecutionContext, continuation?:
   const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
   const response = await context.fetcher.fetch<TagsResponse>({
     method: "GET",
-    url: coda.withQueryParams('https://api.stackexchange.com/2.2/me/tags', {...commonQueryParams, page: nextPage})
+    url: coda.withQueryParams('https://api.stackexchange.com/2.2/me/tags', {...commonParams, page: nextPage})
   });
 
   return {
@@ -73,7 +121,7 @@ export async function getTags(search: string, context: coda.ExecutionContext, co
   const response = await context.fetcher.fetch<TagsResponse>({
     method: "GET",
     url: coda.withQueryParams('https://api.stackexchange.com/2.2/tags', {
-      ...commonQueryParams,
+      ...commonParams,
       sort: 'popular',
       order: 'desc', 
       page: nextPage,
@@ -121,3 +169,15 @@ function parseQuestionUrl(url: string): { id: string } {
 function toEpochTime(date: Date): number {
   return Math.floor(date.getTime() / 1000);
 } 
+
+/**
+ * Throw user friendly error if given error is a result of status code >= 400
+ */
+function ensureNoneErrorStatusCode(error: any): void { 
+  if (error.statusCode >= 400) {
+    const statusError = error as coda.StatusCodeError;
+    const messageName = statusError.body?.error_name;
+    const message = statusError.body?.error_message;
+    throw new coda.UserVisibleError(`${messageName}: ${message}`);
+  }
+}

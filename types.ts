@@ -18,6 +18,8 @@ export interface Question {
   question_id: number;
   link: string;
   title: string;
+  favorited: boolean;
+  body_markdown?: string;
 }
 
 export interface Tag {
