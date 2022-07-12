@@ -131,12 +131,18 @@ pack.addFormula({
 
 pack.addColumnFormat({
   name: 'Question',
-  instructions: 'Show details about a stackoverflow question, given a URL',
+  instructions: 'Paste a stackoverflow question urls',
   formulaName: 'Question',
   matchers: [
     constants.questionUrlRegex
   ]
 });
+
+pack.addColumnFormat({
+  name: 'TagInfo',
+  instructions: 'Type the name of the tag you want to get info on',
+  formulaName: 'TagInfo',
+})
 
 pack.addFormula({
   name: 'BookmarkQuestion',
