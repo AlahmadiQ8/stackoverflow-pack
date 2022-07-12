@@ -1,5 +1,5 @@
 import * as coda from "@codahq/packs-sdk";
-import { bookmarkQuestion, getQuestion, getQuestions, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
+import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
 import { QuestionSchema } from "./schemas";
 import * as constants from './constants';
 import { dateRange, includeQuestionBody, tagsListParameter, tagParameter } from "./parameters";
@@ -81,6 +81,25 @@ pack.addFormula({
     } while (continuation?.hasMore)
 
     return result.map(r => r.from_tag)
+  }
+})
+
+pack.addFormula({
+  name: "RelatedTags", 
+  description: 'Returns the tags that are most related to given tag',
+  parameters: [tagParameter],
+  resultType: coda.ValueType.Array,
+  items: { type: coda.ValueType.String},
+  execute: async ([tag], context) => {
+    const result:  Tag[] = [];
+    let continuation: SeContinuation | undefined;
+    do {
+      let response = await getRelatedTags(tag, context,continuation);
+      result.push(...response.result);
+      ({continuation} = response);
+    } while (continuation?.hasMore)
+
+    return result.map(r => r.name)
   }
 })
 
