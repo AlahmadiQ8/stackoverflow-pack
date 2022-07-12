@@ -158,14 +158,14 @@ export async function getTagSynonyms(tag: string, context: coda.ExecutionContext
 /**
  * Get related tags
  */
-export async function getRelatedTags(tag: string, context: coda.ExecutionContext, continuation?: SeContinuation) {
+export async function getRelatedTags(tags: string[], context: coda.ExecutionContext, continuation?: SeContinuation, pageSize: number = constants.defaultPageSize) {
   const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
   
   let response: coda.FetchResponse<TagsResponse>;
   try {
     response = await context.fetcher.fetch<TagsResponse>({
       method: "GET",
-      url: coda.withQueryParams(`https://api.stackexchange.com/2.2/tags/${tag}/related`, {...commonParams, page: nextPage, pagesize: constants.defaultPageSize})
+      url: coda.withQueryParams(`https://api.stackexchange.com/2.2/tags/${tags.join(';')}/related`, {...commonParams, page: nextPage, pagesize: pageSize})
     });
   } catch(error) {
     ensureNoneErrorStatusCode(error);

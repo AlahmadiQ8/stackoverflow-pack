@@ -3,8 +3,8 @@ import * as coda from "@codahq/packs-sdk";
 export const QuestionSchema = coda.makeObjectSchema({
   properties: {
     question_id: { type: coda.ValueType.Number, required: true },
-    title: { type: coda.ValueType.String, required: true  },
-    link: { type: coda.ValueType.String, codaType: coda.ValueHintType.Url, display: 'title', required: true  },
+    title: { type: coda.ValueType.String, required: true },
+    link: { type: coda.ValueType.String, codaType: coda.ValueHintType.Url, display: 'title', required: true },
     score: { type: coda.ValueType.Number },
     view_count: { type: coda.ValueType.Number },
     answer_count: { type: coda.ValueType.Number },
@@ -18,3 +18,14 @@ export const QuestionSchema = coda.makeObjectSchema({
   idProperty: "question_id",
   featuredProperties: ["link", "creation_date", "score", "view_count", "answer_count", "tags"],
 });
+
+export const TagSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String, required: true },
+    synonyms: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
+    relatedTags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } }
+  },
+  displayProperty: 'name',
+  idProperty: 'name',
+  featuredProperties: ['name', 'synonyms', 'relatedTags']
+})

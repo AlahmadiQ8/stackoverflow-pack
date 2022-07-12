@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
 import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
-import { QuestionSchema } from "./schemas";
+import { QuestionSchema, TagSchema } from "./schemas";
 import * as constants from './constants';
 import { dateRange, includeQuestionBody, tagsListParameter, tagParameter } from "./parameters";
 import { SearchType, SeContinuation, Tag, TagSynonym } from "./types";
@@ -34,6 +34,27 @@ pack.addFormula({
   schema: QuestionSchema,
   execute: getQuestion
 });
+
+pack.addFormula({
+  name: 'TagInfo',
+  description: 'Get information about a tag',
+  parameters: [tagParameter],
+  resultType: coda.ValueType.Object,
+  schema: TagSchema,
+  execute: async ([tag], context) => {
+    const [tagSynonymsResponse, tagsResponse] = await Promise.all([
+      getTagSynonyms(tag, context),
+      getRelatedTags([tag], context, undefined, 7)
+    ]);
+    const synonyms = tagSynonymsResponse.result.map(r => r.from_tag);
+    const relatedTags = tagsResponse.result.map(r => r.name).filter(name =>  name != tag);
+    return {
+      name: tag,
+      synonyms,
+      relatedTags
+    }
+  }
+})
 
 pack.addFormula({
   name: "FindTags",
@@ -75,7 +96,7 @@ pack.addFormula({
     const result:  TagSynonym[] = [];
     let continuation: SeContinuation | undefined;
     do {
-      let response = await getTagSynonyms(tag, context,continuation);
+      let response = await getTagSynonyms(tag, context, continuation);
       result.push(...response.result);
       ({continuation} = response);
     } while (continuation?.hasMore)
@@ -86,15 +107,20 @@ pack.addFormula({
 
 pack.addFormula({
   name: "RelatedTags", 
-  description: 'Returns the tags that are most related to given tag',
-  parameters: [tagParameter],
+  description: 'Returns the tags that are most related to given tags.',
+  parameters: [],
+  varargParameters: [ tagParameter ],
   resultType: coda.ValueType.Array,
   items: { type: coda.ValueType.String},
-  execute: async ([tag], context) => {
+  execute: async ([...tags], context) => {
+    if (tags.length > 4) {
+      throw new coda.UserVisibleError(`Maximum number of tags for this formula is 4, got ${tags.length} tags`)
+    }
+
     const result:  Tag[] = [];
     let continuation: SeContinuation | undefined;
     do {
-      let response = await getRelatedTags(tag, context,continuation);
+      let response = await getRelatedTags(tags, context,continuation);
       result.push(...response.result);
       ({continuation} = response);
     } while (continuation?.hasMore)
