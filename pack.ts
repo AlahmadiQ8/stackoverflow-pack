@@ -1,8 +1,9 @@
 import * as coda from "@codahq/packs-sdk";
-import { bookmarkQuestion, getQuestion, getQuestions, undoBookmarkQuestion } from "./helpers";
+import { bookmarkQuestion, getQuestion, getQuestions, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
 import { QuestionSchema } from "./schemas";
 import * as constants from './constants';
-import { dateRange, includeQuestionBody, tagsListParameter, tagsParameter } from "./parameters";
+import { dateRange, includeQuestionBody, tagsListParameter, tagParameter } from "./parameters";
+import { SearchType, SeContinuation, Tag, TagSynonym } from "./types";
 
 export const pack = coda.newPack();
 
@@ -19,7 +20,6 @@ pack.setUserAuthentication({
   tokenQueryParam: "access_token", 
 });
 
-// Adds Formula to  get information about a single question via url
 pack.addFormula({
   name: "Question",
   description: "Get information about a question from it's URL.",
@@ -35,21 +35,55 @@ pack.addFormula({
   execute: getQuestion
 });
 
-// Adds Formula to find popular tags via autocomplete
 pack.addFormula({
   name: "FindTags",
-  description: "Search popular tags. Returns list of tags.",
+  description: "Type the first letters of a desired tags to see the most popular matching tags",
   parameters: [],
-  varargParameters: [ tagsParameter ],
+  varargParameters: [ tagParameter ],
   resultType: coda.ValueType.Array,
   items: { type: coda.ValueType.String },
-  execute: async ([...tags]) => {
+  execute: ([...tags]) => {
     return tags as string[];
   },
-  connectionRequirement: coda.ConnectionRequirement.Optional 
 })
 
-// Column format for Question formula
+pack.addFormula({
+  name: "MyTags",
+  description: 'Get the tags that the account have been active in.',
+  parameters: [],
+  resultType: coda.ValueType.Array,
+  items: { type: coda.ValueType.String },
+  execute: async (_, context) => {
+    const result: Tag[] = [];
+    let continuation: SeContinuation | undefined;
+    do {
+      let response = await getUserTags(context, continuation);
+      result.push(...response.result);
+      ({continuation} = response);
+    } while (continuation?.hasMore)
+    return result.map(r => r.name); 
+  }
+})
+
+pack.addFormula({
+  name: "TagSynonyms", 
+  description: 'Gets all synonyms pointing to a given tag',
+  parameters: [tagParameter],
+  resultType: coda.ValueType.Array,
+  items: { type: coda.ValueType.String},
+  execute: async ([tag], context) => {
+    const result:  TagSynonym[] = [];
+    let continuation: SeContinuation | undefined;
+    do {
+      let response = await getTagSynonyms(tag, context,continuation);
+      result.push(...response.result);
+      ({continuation} = response);
+    } while (continuation?.hasMore)
+
+    return result.map(r => r.from_tag)
+  }
+})
+
 pack.addColumnFormat({
   name: 'Question',
   instructions: 'Show details about a stackoverflow question, given a URL',
@@ -59,7 +93,6 @@ pack.addColumnFormat({
   ]
 });
 
-// Action to bookmark a question
 pack.addFormula({
   name: 'BookmarkQuestion',
   description: 'Bookmark (previously known as favorite) given question url to your account.',
@@ -77,7 +110,6 @@ pack.addFormula({
   execute: bookmarkQuestion
 });
 
-// Action to remove question from bookmarks
 pack.addFormula({
   name: 'UndoBookmarkQuestion',
   description: 'Undo bookmark (previously known as favorite) for a given question url.',
@@ -95,7 +127,6 @@ pack.addFormula({
   execute: undoBookmarkQuestion
 });
 
-// Adds sync table to get all questions. Better to use filters to limit results
 pack.addSyncTable({
   name: "Questions",
   schema: QuestionSchema,
@@ -104,14 +135,21 @@ pack.addSyncTable({
     name: "SyncQuestions",
     description: "Sync Questions",
     parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: 'SearchType',
+        description: 'Whether to SearchType entire questions on stackoverflow or only the current user\'s bookmarked questions. Note that `Tags Filter` will not work for `My bookmarks` option',
+        suggestedValue: SearchType.EntireSite,  
+        autocomplete: [SearchType.EntireSite, SearchType.MyBookmarks] 
+      }),
       dateRange,
       includeQuestionBody,
       tagsListParameter,
     ],
-    execute: async ([dateRange, includeMarkdownBody, tags], context) => {
+    execute: async ([searchType, dateRange, includeMarkdownBody, tags], context) => {
       let page = (context.sync.continuation?.page as number) || 1;
       const tagsFilter = tags.join(';');
-      let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, context, includeMarkdownBody);
+      let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, searchType as SearchType, context, includeMarkdownBody);
       const questions = response.body.items;
       let continuation;
       if (response.body.has_more) {

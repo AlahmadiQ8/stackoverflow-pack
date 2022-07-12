@@ -1,11 +1,11 @@
 import * as coda from "@codahq/packs-sdk";
 import { getTags } from "./helpers";
-import { SeContinuation, Tag } from "./types";
+import { SearchType, SeContinuation, Tag } from "./types";
 
 export const dateRange = coda.makeParameter({
   type: coda.ParameterType.DateArray,
-  name: "dateRange",
-  description: "The date range over which data should be fetched.",
+  name: "DateCreated",
+  description: "Filter by created date",
   optional: false,
 })
 
@@ -17,28 +17,27 @@ export const includeQuestionBody = coda.makeParameter({
   suggestedValue: false
 })
 
-export const tagsParameter = coda.makeParameter({
+export const tagParameter = coda.makeParameter({
   type: coda.ParameterType.String,
   name: 'Tag',
-  description: 'A tag',
-  autocomplete: fetchTagsForAutocomplete
+  description: 'A tag is a word or phrase that describes the topic of the question',
+  autocomplete: fetchTagsForAutocomplete,
 })
 
 export const tagsListParameter = coda.makeParameter({
   type: coda.ParameterType.StringArray,
-  name: 'TagsList',
-  description:'Tags to filter. use `FindTags()` formula to find popular tags'
+  name: 'TagsFilter',
+  description: `Tags to filter. You can use 'FindTags()', 'MyTags()', or 'TagSynonyms()' formulas to find tags. This Filter will not work with ${SearchType.MyBookmarks}`
 })
 
 async function fetchTagsForAutocomplete(context: coda.ExecutionContext, search: string) {
-  let result: Tag[] = [];  
+  const result: Tag[] = [];  
   let continuation: SeContinuation | undefined;
   let maxResultCount = 15;
   let currentResultCount = 0;
   do {    
     let response = await getTags(search, context, continuation, 15);
-    result = result.concat(...response.result);
-    currentResultCount = result.length;
+    currentResultCount = result.push(...response.result);
     ({continuation} = response);
   } while (currentResultCount < maxResultCount && continuation?.hasMore);
   return coda.autocompleteSearchObjects(search, result, 'name', 'name');

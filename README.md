@@ -25,7 +25,8 @@ npx coda auth path/to/pack.ts
 npx coda execute pack.ts Question https://stackoverflow.com/questions/72913818/how-to-access-my-sprite-properties-from-outside-a-function-in-phaser3-and-matter
 
 # Sync Table:
-npx coda execute pack.ts Questions "2022-02-01,2022-05-01" "false" "reactjs" "nextjs"
+npx coda execute pack.ts Questions "All stackoverflow" "2022-02-01,2022-05-01" "false" "reactjs,nextjs,vercel"
+npx coda execute pack.ts Questions "My bookmarks" "" "false" "reactjs"
 
 # Bookmark Question
 npx coda execute pack.ts BookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
@@ -37,3 +38,10 @@ npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questio
 ### Uploading the pack
 
 See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/latest/guides/development/cli/#upload
+
+## Features I wish I had
+
+* Autocomplete for array parameter type
+* conditional parameters based on previous parameter valuess
+* Ability to issue UI warning for the user `coda.showUserFriendlyWarning()`
+* Environment Variables that can be set from the coda UI and be set differently locally (something like .env file)

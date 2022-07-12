@@ -2,6 +2,7 @@ import * as coda from "@codahq/packs-sdk";
 
 export type QuestionsResponse = SeResponse<Question>
 export type TagsResponse = SeResponse<Tag>
+export type TagSynonymsResponse = SeResponse<TagSynonym>
 
 interface SeResponse<T> {
   items: T[];
@@ -28,6 +29,14 @@ export interface Tag {
   name: string;
 }
 
+export interface TagSynonym {
+  creation_date: number;
+  last_applied_date: number;
+  applied_count: number;
+  to_tag: string;
+  from_tag: string;
+}
+
 export interface SeContinuation extends coda.Continuation {
   currentPage: number,
   hasMore: number,
@@ -38,4 +47,9 @@ export interface SeFilterQueryParameters {
   toDate?: Date,
   tags?: string,
   page: number,
+}
+
+export const enum SearchType {
+  EntireSite = "All stackoverflow",
+  MyBookmarks = "My bookmarks"
 }

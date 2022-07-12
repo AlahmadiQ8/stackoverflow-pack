@@ -5,7 +5,7 @@
  * See https://api.stackexchange.com/docs/filters for more info
  * To see what fields included, try GET https://api.stackexchange.com/2.3/filters/!4kiSra10*uOIiKTB*9dZ2QjFa 
  */
-export const filter = '!VmX2VPPqyz*SKc(sJIAb(2aP_N';
+export const filter = '!VmX2VPPlZ9CFeEPxGY7Gw9WhWs';
 
 /**
  * stackoverflow filter to include and exlude response fields. 
@@ -16,7 +16,7 @@ export const filter = '!VmX2VPPqyz*SKc(sJIAb(2aP_N';
  * See https://api.stackexchange.com/docs/filters for more info
  * To see what fields included, try GET https://api.stackexchange.com/2.3/filters/!VmX2VPPqyz*SKc(sJIAb(2kPtN 
  */
-export const filterWithQuestionBody = '!2dZnOqv5NviYVYhuAPrZ4vR-zhCOc';
+export const filterWithQuestionBody = '!2dZnOqv4FSN_x2FuHeTKR86AOPju3';
 
 /**
  * This key must be used with the access token for increased throttle quota
@@ -26,9 +26,9 @@ export const filterWithQuestionBody = '!2dZnOqv5NviYVYhuAPrZ4vR-zhCOc';
 export const seKey = '0z9mHguI53wsnmgPMUFN6A((';
 
 /**
- * Default maximum number of questions to fetch per request
+ * Default page size to fetch per request
  */
-export const defaultPageSize = 50;
+export const defaultPageSize = 100;
 
 /**
  * Regex for matching stackoverflow question url

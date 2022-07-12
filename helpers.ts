@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
 import * as constants from './constants';
-import { QuestionsResponse, SeContinuation, SeFilterQueryParameters, TagsResponse } from "./types";
+import { QuestionsResponse, SearchType, SeContinuation, SeFilterQueryParameters, TagsResponse, TagSynonymsResponse } from "./types";
 
 /**
  * Mandatory query params to all api requests
@@ -14,14 +14,18 @@ const commonParams = {
 /**
  * Fetch questions given certain filters
  */
-export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQueryParameters, context: coda.SyncExecutionContext, includeQuestionBody: boolean = false) {
-  const url = coda.withQueryParams('https://api.stackexchange.com/2.2/questions', {
+export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQueryParameters, searchType: SearchType, context: coda.SyncExecutionContext, includeQuestionBody: boolean = false) {
+  const endpoint = searchType == SearchType.EntireSite
+    ? 'https://api.stackexchange.com/2.2/questions'
+    : 'https://api.stackexchange.com/2.2/me/favorites'
+  const url = coda.withQueryParams(endpoint, {
     ...commonParams, 
     ...(includeQuestionBody && { filter: constants.filterWithQuestionBody }),
     page, 
     pagesize: constants.defaultPageSize,
-    ...(fromDate && { fromDate: toEpochTime(fromDate) }),
-    ...(toDate && { toDate: toEpochTime(toDate) }),
+    // When user selects "Everything" in the Date Range parameter, we should not include fromdate & todate otherwise we'd get 400 error
+    ...(toEpochTime(fromDate) > -62135608012 && { fromDate: toEpochTime(fromDate) }),
+    ...(toEpochTime(toDate) < 64060577999 && { toDate: toEpochTime(toDate) }),
     ...(tags && { tagged: tags }),
   });
 
@@ -52,7 +56,7 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
 export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
   const { id } = parseQuestionUrl(url);
 
-  let response;
+  let response: coda.FetchResponse;
   try {
     response = await context.fetcher.fetch<QuestionsResponse>({
       method: 'POST',
@@ -62,6 +66,7 @@ export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
     });
   } catch (error) {
     ensureNoneErrorStatusCode(error);
+    throw error;
   }
 
   const question = response.body.items[0]; 
@@ -77,7 +82,7 @@ export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
 export async function undoBookmarkQuestion([url], context: coda.ExecutionContext) {
   const { id } = parseQuestionUrl(url);
 
-  let response;
+  let response: coda.FetchResponse;
   try {
     response = await context.fetcher.fetch<QuestionsResponse>({
       method: 'POST',
@@ -87,6 +92,7 @@ export async function undoBookmarkQuestion([url], context: coda.ExecutionContext
     });
   } catch (error) {
     ensureNoneErrorStatusCode(error);
+    throw error;
   }
 
   const question = response.body.items[0]; 
@@ -101,10 +107,44 @@ export async function undoBookmarkQuestion([url], context: coda.ExecutionContext
  */
 export async function getUserTags(context: coda.ExecutionContext, continuation?: SeContinuation) {
   const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
-  const response = await context.fetcher.fetch<TagsResponse>({
-    method: "GET",
-    url: coda.withQueryParams('https://api.stackexchange.com/2.2/me/tags', {...commonParams, page: nextPage})
-  });
+  
+  let response: coda.FetchResponse<TagsResponse>;
+  try {
+    response = await context.fetcher.fetch<TagsResponse>({
+      method: "GET",
+      url: coda.withQueryParams('https://api.stackexchange.com/2.2/me/tags', {...commonParams, page: nextPage, pagesize: constants.defaultPageSize})
+    });
+  } catch(error) {
+    ensureNoneErrorStatusCode(error);
+    throw error;
+  }
+
+  return {
+    result: response.body.items,
+    continuation: {
+      currentPage: nextPage,
+      hasMore: Number(response.body.has_more)
+    }
+  }
+}
+
+/**
+ * Get tag synonyms
+ */
+export async function getTagSynonyms(tag: string, context: coda.ExecutionContext, continuation?: SeContinuation) {
+  const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
+  const { filter,  ...params } = commonParams; // don't use filter param in this api call
+  
+  let response: coda.FetchResponse<TagSynonymsResponse>;
+  try {
+    response = await context.fetcher.fetch<TagSynonymsResponse>({
+      method: "GET",
+      url: coda.withQueryParams(`https://api.stackexchange.com/2.2/tags/${tag}/synonyms`, {...params, page: nextPage, pagesize: constants.defaultPageSize})
+    });
+  } catch(error) {
+    ensureNoneErrorStatusCode(error);
+    throw error;
+  }
 
   return {
     result: response.body.items,
@@ -120,17 +160,24 @@ export async function getUserTags(context: coda.ExecutionContext, continuation?:
  */
 export async function getTags(search: string, context: coda.ExecutionContext, continuation?: SeContinuation, pageSize: number = constants.defaultPageSize) {
   const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
-  const response = await context.fetcher.fetch<TagsResponse>({
-    method: "GET",
-    url: coda.withQueryParams('https://api.stackexchange.com/2.2/tags', {
-      ...commonParams,
-      sort: 'popular',
-      order: 'desc', 
-      page: nextPage,
-      pagesize: pageSize,
-      inname: search
-    })
-  });
+
+  let response: coda.FetchResponse;
+  try {
+    response = await context.fetcher.fetch<TagsResponse>({
+      method: "GET",
+      url: coda.withQueryParams('https://api.stackexchange.com/2.2/tags', {
+        ...commonParams,
+        sort: 'popular',
+        order: 'desc', 
+        page: nextPage,
+        pagesize: pageSize,
+        inname: search
+      })
+    });
+  } catch (error) {
+    ensureNoneErrorStatusCode(error)
+    throw error;
+  }
 
   return {
     result: response.body.items,
