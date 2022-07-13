@@ -156,6 +156,32 @@ export async function getTagSynonyms(tag: string, context: coda.ExecutionContext
 }
 
 /**
+ * Get tag info
+ */
+ export async function getTagInfo(tag: string, context: coda.ExecutionContext, continuation?: SeContinuation) {
+  const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
+  
+  let response: coda.FetchResponse<TagsResponse>;
+  try {
+    response = await context.fetcher.fetch<TagsResponse>({
+      method: "GET",
+      url: coda.withQueryParams(`https://api.stackexchange.com/2.2/tags/${tag}/info`, {...commonParams, page: nextPage, pagesize: constants.defaultPageSize})
+    });
+  } catch(error) {
+    ensureNoneErrorStatusCode(error);
+    throw error;
+  }
+
+  return {
+    result: response.body.items,
+    continuation: {
+      currentPage: nextPage,
+      hasMore: Number(response.body.has_more)
+    }
+  }
+}
+
+/**
  * Get related tags
  */
 export async function getRelatedTags(tags: string[], context: coda.ExecutionContext, continuation?: SeContinuation, pageSize: number = constants.defaultPageSize) {

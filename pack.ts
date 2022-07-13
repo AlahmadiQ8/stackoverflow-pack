@@ -1,5 +1,5 @@
 import * as coda from "@codahq/packs-sdk";
-import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
+import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagInfo, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
 import { QuestionSchema, TagSchema } from "./schemas";
 import * as constants from './constants';
 import { dateRange, includeQuestionBody, tagsListParameter, tagParameter } from "./parameters";
@@ -42,16 +42,16 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: TagSchema,
   execute: async ([tag], context) => {
-    const [tagSynonymsResponse, tagsResponse] = await Promise.all([
+    const [tagSynonymsResponse, tagsResponse, tagInfoResponse] = await Promise.all([
       getTagSynonyms(tag, context),
-      getRelatedTags([tag], context, undefined, 7)
+      getRelatedTags([tag], context, undefined, 7),
+      getTagInfo(tag, context)
     ]);
-    const synonyms = tagSynonymsResponse.result.map(r => r.from_tag);
-    const relatedTags = tagsResponse.result.map(r => r.name).filter(name =>  name != tag);
     return {
       name: tag,
-      synonyms,
-      relatedTags
+      synonyms: tagSynonymsResponse.result.map(r => r.from_tag),
+      relatedTags: tagsResponse.result.map(r => r.name).filter(name =>  name != tag),
+      questionCount: tagInfoResponse.result[0].count,
     }
   }
 })

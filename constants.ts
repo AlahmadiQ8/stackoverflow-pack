@@ -5,7 +5,7 @@
  * See https://api.stackexchange.com/docs/filters for more info
  * To see what fields included, try GET https://api.stackexchange.com/2.3/filters/!4kiSra10*uOIiKTB*9dZ2QjFa 
  */
-export const filter = '!VmX2VPPlZ9CFeEPxGY7Gw9WhWs';
+export const filter = '!*ZXu3M2yogA((is9W7YpZB3w';
 
 /**
  * stackoverflow filter to include and exlude response fields. 
@@ -16,7 +16,7 @@ export const filter = '!VmX2VPPlZ9CFeEPxGY7Gw9WhWs';
  * See https://api.stackexchange.com/docs/filters for more info
  * To see what fields included, try GET https://api.stackexchange.com/2.3/filters/!VmX2VPPqyz*SKc(sJIAb(2kPtN 
  */
-export const filterWithQuestionBody = '!2dZnOqv4FSN_x2FuHeTKR86AOPju3';
+export const filterWithQuestionBody = '!VmX2VPPlZ9CFa_8c-hdv.r(IO7';
 
 /**
  * This key must be used with the access token for increased throttle quota

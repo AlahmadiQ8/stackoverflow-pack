@@ -23,7 +23,8 @@ export const TagSchema = coda.makeObjectSchema({
   properties: {
     name: { type: coda.ValueType.String, required: true },
     synonyms: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
-    relatedTags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } }
+    relatedTags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
+    questionCount: { type: coda.ValueType.Number }
   },
   displayProperty: 'name',
   idProperty: 'name',

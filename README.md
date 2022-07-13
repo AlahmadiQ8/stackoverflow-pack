@@ -45,3 +45,4 @@ See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/
 * conditional parameters based on previous parameter valuess
 * Ability to issue UI warning for the user `coda.showUserFriendlyWarning()`
 * Environment Variables that can be set from the coda UI and be set differently locally (something like .env file)
+* Autocomplete to work on column format that uses parameters having autocomplete fields 

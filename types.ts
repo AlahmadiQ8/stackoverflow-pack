@@ -21,6 +21,7 @@ export interface Question {
   title: string;
   favorited: boolean;
   body_markdown?: string;
+  is_answered: string; 
 }
 
 export interface Tag {
