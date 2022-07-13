@@ -12,11 +12,12 @@ export const QuestionSchema = coda.makeObjectSchema({
     last_activity_date: { type: coda.ValueType.Number, codaType: coda.ValueHintType.DateTime },
     creation_date: { type: coda.ValueType.Number, codaType: coda.ValueHintType.DateTime },
     body_markdown: { type: coda.ValueType.String, codaType: coda.ValueHintType.Markdown },
-    favorited: { type: coda.ValueType.Boolean, required: true }
+    favorited: { type: coda.ValueType.Boolean, required: true },
+    is_answered: { type: coda.ValueType.Boolean, required: true }
   },
   displayProperty: "question_id",
   idProperty: "question_id",
-  featuredProperties: ["link", "creation_date", "score", "view_count", "answer_count", "tags"],
+  featuredProperties: ["link", "creation_date", "score", "view_count", "answer_count", "tags", "is_answered"],
 });
 
 export const TagSchema = coda.makeObjectSchema({

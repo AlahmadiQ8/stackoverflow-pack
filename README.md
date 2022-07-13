@@ -46,3 +46,7 @@ See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/
 * Ability to issue UI warning for the user `coda.showUserFriendlyWarning()`
 * Environment Variables that can be set from the coda UI and be set differently locally (something like .env file)
 * Autocomplete to work on column format that uses parameters having autocomplete fields 
+
+## Bugs 
+
+* Autocomplete doesn't work when your search term contains the symbol `-`. Example: I want to type `azure-function`, as soon as I type `azure-` the autocomplete stops.
