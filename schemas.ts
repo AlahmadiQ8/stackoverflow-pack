@@ -1,5 +1,17 @@
 import * as coda from "@codahq/packs-sdk";
 
+export const TagSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String, required: true },
+    synonyms: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
+    relatedTags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
+    questionCount: { type: coda.ValueType.Number }
+  },
+  displayProperty: 'name',
+  idProperty: 'name',
+  featuredProperties: ['name']
+})
+
 export const QuestionSchema = coda.makeObjectSchema({
   properties: {
     question_id: { type: coda.ValueType.Number, required: true },
@@ -8,7 +20,7 @@ export const QuestionSchema = coda.makeObjectSchema({
     score: { type: coda.ValueType.Number },
     view_count: { type: coda.ValueType.Number },
     answer_count: { type: coda.ValueType.Number },
-    tags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
+    tags: { type: coda.ValueType.Array, items: coda.makeReferenceSchemaFromObjectSchema(TagSchema, 'Tag') },
     last_activity_date: { type: coda.ValueType.Number, codaType: coda.ValueHintType.DateTime },
     creation_date: { type: coda.ValueType.Number, codaType: coda.ValueHintType.DateTime },
     body_markdown: { type: coda.ValueType.String, codaType: coda.ValueHintType.Markdown },
@@ -19,15 +31,3 @@ export const QuestionSchema = coda.makeObjectSchema({
   idProperty: "question_id",
   featuredProperties: ["link", "creation_date", "score", "view_count", "answer_count", "tags", "is_answered"],
 });
-
-export const TagSchema = coda.makeObjectSchema({
-  properties: {
-    name: { type: coda.ValueType.String, required: true },
-    synonyms: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
-    relatedTags: { type: coda.ValueType.Array, items: { type: coda.ValueType.String } },
-    questionCount: { type: coda.ValueType.Number }
-  },
-  displayProperty: 'name',
-  idProperty: 'name',
-  featuredProperties: ['name', 'synonyms', 'relatedTags']
-})

@@ -28,6 +28,9 @@ npx coda execute pack.ts Question https://stackoverflow.com/questions/72913818/h
 npx coda execute pack.ts Questions "All stackoverflow" "2022-02-01,2022-05-01" "false" "reactjs,nextjs,vercel"
 npx coda execute pack.ts Questions "My bookmarks" "" "false" "reactjs"
 
+# Formula TagInfo
+npx coda execute pack.ts TagInfo "javascript"
+
 # Bookmark Question
 npx coda execute pack.ts BookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
 
@@ -46,6 +49,7 @@ See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/
 * Ability to issue UI warning for the user `coda.showUserFriendlyWarning()`
 * Environment Variables that can be set from the coda UI and be set differently locally (something like .env file)
 * Autocomplete to work on column format that uses parameters having autocomplete fields 
+* Ability to convert `List` to Table Rows
 
 ## Bugs 
 

@@ -41,7 +41,7 @@ pack.addFormula({
   parameters: [tagParameter],
   resultType: coda.ValueType.Object,
   schema: TagSchema,
-  execute: async ([tag], context) => {
+  execute: async ([tag], context): Promise<Tag> => {
     const [tagSynonymsResponse, tagsResponse, tagInfoResponse] = await Promise.all([
       getTagSynonyms(tag, context),
       getRelatedTags([tag], context, undefined, 7),
@@ -176,7 +176,7 @@ pack.addFormula({
   schema: coda.withIdentity(QuestionSchema, 'Question'),
   extraOAuthScopes: ['write_access'],
   execute: undoBookmarkQuestion
-});
+})
 
 pack.addSyncTable({
   name: "Questions",
@@ -200,10 +200,9 @@ pack.addSyncTable({
     execute: async ([searchType, dateRange, includeMarkdownBody, tags], context) => {
       let page = (context.sync.continuation?.page as number) || 1;
       const tagsFilter = tags.join(';');
-      let response = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, searchType as SearchType, context, includeMarkdownBody);
-      const questions = response.body.items;
+      let {questions, hasMore} = await getQuestions({fromDate: dateRange[0], toDate: dateRange[1], tags: tagsFilter, page}, searchType as SearchType, context, includeMarkdownBody);
       let continuation;
-      if (response.body.has_more) {
+      if (hasMore) {
         continuation = { page: page + 1 };
       }
 

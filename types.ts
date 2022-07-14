@@ -1,7 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 
-export type QuestionsResponse = SeResponse<Question>
-export type TagsResponse = SeResponse<Tag>
+export type QuestionsResponse = SeResponse<Omit<Question, 'tags'> & { tags: string[] }>
+export type TagsResponse = SeResponse<TagResponse>
 export type TagSynonymsResponse = SeResponse<TagSynonym>
 
 interface SeResponse<T> {
@@ -10,7 +10,7 @@ interface SeResponse<T> {
 }
 
 export interface Question {
-  tags: string[];
+  tags: Tag[];
   view_count: number;
   answer_count: number;
   score: number;
@@ -21,13 +21,20 @@ export interface Question {
   title: string;
   favorited: boolean;
   body_markdown?: string;
-  is_answered: string; 
+  is_answered: boolean; 
 }
 
-export interface Tag {
-  has_synonyms: boolean;
-  count: number;
+export interface TagResponse {
   name: string;
+  has_synonyms?: boolean;
+  count?: number;
+}
+
+export type Tag = {
+  name: string;
+  synonyms?: string[],
+  relatedTags?: string[],
+  questionCount?: number
 }
 
 export interface TagSynonym {

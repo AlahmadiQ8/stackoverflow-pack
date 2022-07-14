@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
 import * as constants from './constants';
-import { QuestionsResponse, SearchType, SeContinuation, SeFilterQueryParameters, TagsResponse, TagSynonymsResponse } from "./types";
+import { Question, QuestionsResponse, SearchType, SeContinuation, SeFilterQueryParameters, Tag, TagResponse, TagsResponse, TagSynonymsResponse } from "./types";
 
 /**
  * Mandatory query params to all api requests
@@ -34,7 +34,9 @@ export async function getQuestions({fromDate, toDate, tags, page}: SeFilterQuery
     url
   });
 
-  return response;
+  const questions: Question[] = response.body.items.map(item => ({...item, tags: item.tags.map(name => ({ name }))}))
+
+  return {questions, hasMore: Number(response.body.has_more) };
 }
 
 /**
@@ -47,7 +49,9 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
     url: coda.withQueryParams(`https://api.stackexchange.com/2.2/questions/${id}`, commonParams)
   });
 
-  return response.body.items[0];
+  const question = response.body.items[0];
+
+  return {...question, tags: question.tags.map(name => ({name}))};
 }
 
 /**
@@ -213,7 +217,7 @@ export async function getRelatedTags(tags: string[], context: coda.ExecutionCont
 export async function getTags(search: string, context: coda.ExecutionContext, continuation?: SeContinuation, pageSize: number = constants.defaultPageSize) {
   const nextPage = continuation?.currentPage ? continuation.currentPage + 1 : 1;
 
-  let response: coda.FetchResponse;
+  let response: coda.FetchResponse<TagsResponse>;
   try {
     response = await context.fetcher.fetch<TagsResponse>({
       method: "GET",
