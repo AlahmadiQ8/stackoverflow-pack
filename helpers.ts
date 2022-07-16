@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
 import * as constants from './constants';
-import { QuestionsResponse, SearchType, SeContinuation, SeFilterQueryParameters, TagsResponse, TagSynonymsResponse } from "./types";
+import { QuestionsResponse, SearchType, SeContinuation, SeFilterQueryParameters, TagsResponse, TagSynonymsResponse, UserResponse } from "./types";
 
 /**
  * Mandatory query params to all api requests
@@ -50,13 +50,40 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
   return response.body.items[0];
 }
 
+/** 
+ * Fetches data about a stackoverflow user
+ */
+export async function getUser([username]: [string], context: coda.ExecutionContext) {
+
+  // We don't need filter param here
+  const {filter, ...params} = commonParams;
+
+  let response: coda.FetchResponse<UserResponse>;
+  try {
+    response = await context.fetcher.fetch<UserResponse>({
+      method: 'GET',
+      url: coda.withQueryParams(`https://api.stackexchange.com/2.2/users`, {...params, inname: username})
+    });
+  } catch (error) {
+    ensureNoneErrorStatusCode(error);
+    throw error;
+  }
+  
+  const user = response.body.items.find(u => u.display_name == username);
+  if (!user) {
+    throw new coda.UserVisibleError(`Could not find user with username '${username}'`)
+  }
+
+  return user;
+}
+
 /**
  * Boomarks a given question via url
  */
 export async function bookmarkQuestion([url], context: coda.ExecutionContext) {
   const { id } = parseQuestionUrl(url);
 
-  let response: coda.FetchResponse;
+  let response: coda.FetchResponse<QuestionsResponse>;
   try {
     response = await context.fetcher.fetch<QuestionsResponse>({
       method: 'POST',

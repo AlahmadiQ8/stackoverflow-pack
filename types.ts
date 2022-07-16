@@ -3,6 +3,7 @@ import * as coda from "@codahq/packs-sdk";
 export type QuestionsResponse = SeResponse<Question>
 export type TagsResponse = SeResponse<Tag>
 export type TagSynonymsResponse = SeResponse<TagSynonym>
+export type UserResponse = SeResponse<User>
 
 interface SeResponse<T> {
   items: T[];
@@ -21,7 +22,7 @@ export interface Question {
   title: string;
   favorited: boolean;
   body_markdown?: string;
-  is_answered: string; 
+  is_answered: boolean; 
 }
 
 export interface Tag {
@@ -53,4 +54,11 @@ export interface SeFilterQueryParameters {
 export const enum SearchType {
   EntireSite = "All stackoverflow",
   MyBookmarks = "My bookmarks"
+}
+
+export interface User {
+  reputation: number;
+  link: string;
+  profile_image: string;
+  display_name: string;
 }

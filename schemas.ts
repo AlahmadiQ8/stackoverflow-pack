@@ -31,3 +31,12 @@ export const TagSchema = coda.makeObjectSchema({
   idProperty: 'name',
   featuredProperties: ['name', 'synonyms', 'relatedTags']
 })
+
+export const UserSchema = coda.makeObjectSchema({
+  properties: {
+    display_name: { type: coda.ValueType.String, required: true },
+    profile_image: { type: coda.ValueType.String, codaType: coda.ValueHintType.ImageReference },
+    link: { type: coda.ValueType.String, codaType: coda.ValueHintType.Url, display: 'title', required: true },
+    reputation: {type: coda.ValueType.Number}, 
+  }
+})

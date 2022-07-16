@@ -1,6 +1,6 @@
 import * as coda from "@codahq/packs-sdk";
-import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagInfo, getTagSynonyms, getUserTags, undoBookmarkQuestion } from "./helpers";
-import { QuestionSchema, TagSchema } from "./schemas";
+import { bookmarkQuestion, getQuestion, getQuestions, getRelatedTags, getTagInfo, getTagSynonyms, getUser, getUserTags, undoBookmarkQuestion } from "./helpers";
+import { QuestionSchema, TagSchema, UserSchema } from "./schemas";
 import * as constants from './constants';
 import { dateRange, includeQuestionBody, tagsListParameter, tagParameter } from "./parameters";
 import { SearchType, SeContinuation, Tag, TagSynonym } from "./types";
@@ -19,6 +19,21 @@ pack.setUserAuthentication({
   scopes: ["read_inbox", "no_expiry", "private_info"],
   tokenQueryParam: "access_token", 
 });
+
+pack.addFormula({
+  name: "User", 
+  description: 'Get data about a stackoverflow user', 
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: 'username',
+      description: 'The username of the StackOverflow user.',
+    })
+  ],
+  resultType: coda.ValueType.Object,
+  schema: UserSchema,
+  execute: getUser
+})
 
 pack.addFormula({
   name: "Question",

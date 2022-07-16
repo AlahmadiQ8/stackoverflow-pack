@@ -46,7 +46,30 @@ See [Using the CLI - Coda Pack SDK: Uploading Packs]https://coda.io/packs/build/
 * Ability to issue UI warning for the user `coda.showUserFriendlyWarning()`
 * Environment Variables that can be set from the coda UI and be set differently locally (something like .env file)
 * Autocomplete to work on column format that uses parameters having autocomplete fields 
+* Button to trigger Sync table
 
 ## Bugs 
 
 * Autocomplete doesn't work when your search term contains the symbol `-`. Example: I want to type `azure-function`, as soon as I type `azure-` the autocomplete stops.
+
+## Questions to Ask in Office Hours
+
+* [x] Discuss Features & bugs
+* [x] Discuss Demo Doc
+  * Come up with ideas for demo doc
+  * Discuss structure
+* [x] User feedback 
+  * Since you are my target user, what other things you would expect to see?
+* [x] Structure
+  * Showcase the pack
+  * Quick demo about usage
+  * Show case the demo doc (submission doc).
+  * 
+
+
+Entries will be judged on the following equally weighted criteria, and according to the sole and absolute discretion of the judges:
+
+Potential Impact (How useful would the Pack be to Coda users? How many use cases does it unlock in Coda?)
+Design and Features (Is the user experience and design of the project well thought out? Have you taken advantage of relevant features of the platform to make your Pack more useful? How well have you adhered to our Best Practices?)
+Compelling Demo (How well do you demonstrate the value of the Pack? Is the demo doc well designed and visually interesting?)
+Quality of the Idea (How creative and unique is the project?)
