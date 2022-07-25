@@ -61,3 +61,17 @@ npx coda execute pack.ts BookmarkQuestion "https://stackoverflow.com/questions/7
 # Undo Bookmark Question
 npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questions/72931914/error-usehref-may-be-used-only-in-the-context-of-a-router-component-in-reg"
 ```
+
+## Experimenting with Stack Overflow API with Postman
+
+you can experiment with [Stack Overflow API](https://api.stackexchange.com/) with Postment by forking the collection in the button below. Keep in mind that you must have the following environment variables to run the requests in the collection: 
+ 
+* `ClientId`
+* `ClientSecret`
+* `key`
+
+These values correspond to the Stack Exchange app created as shown below: 
+
+![Stack Exchange App](/assets/stack-exchange-app-screenshot.png)
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53?action=collection%2Ffork&collection-url=entityId%3D2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53%26entityType%3Dcollection%26workspaceId%3Dce07deaf-31f3-40f0-90c5-4f8800bdbbd0)
