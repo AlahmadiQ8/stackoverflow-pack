@@ -10,22 +10,23 @@ See [Get started on your local machine](https://coda.io/packs/build/latest/tutor
 
 The easiest way to develop locally is to use the development docker container.
 
-1. Install [VSCode Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. 
+1. Install [VSCode Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
 2. Run the `Remote-Containers: Open Folder in Container...` command and select the local folder.
 
-A new VSCode window will launch where you can develop and run commands in a bash terminal. 
+A new VSCode window will launch where you can develop and run commands in a bash terminal.
 
-### Setup Stackoverflow Authentication 
+### Setup Stackoverflow Authentication
 
 You need to have a client id and client secret to enable the pack to use the Stack Overflow API.
 
 1. Create an Stack Exchange app at https://stackapps.com/apps/oauth/register
-2. Fill out the required fields. For the OAuth Domain, use the value `localhost`.
+2. Fill out the required fields. For the OAuth Domain, use the value `localhost`. NOTE: if you want to use Postmant to experiment with the api, use the value `pstmn.io` instead.
 3. Once created, copy the Client Id and Client Secret
-3. (optional) For write apis such as Bookmark action (`/questions/${id}/favorite`), you must edit the app and add a Stack App Post. Post a new question on Stack Exchange with the tags `app` or `script` and post the question url value field.
-4. Run `npx coda auth pack.ts`. It will ask you for the client id and client secret you copied in the previous page. 
+4. (optional) For write apis such as Bookmark action (`/questions/${id}/favorite`), you must edit the app and add a Stack App Post. Post a new question on Stack Exchange with the tags `app` or `script` and post the question url value field.
 
-Once done, `.coda-credentials.json` file will be generated. Make sure you edit the `scopes` as shown below: 
+![](/assets/stack-exchange-settings-screenshot.png)
+
+Once done, run `npx coda auth pack.ts`. It will ask you for the client id and client secret you copied in the previous page. `.coda-credentials.json` file will be generated. Make sure you edit the `scopes` as shown below:
 
 ```json
 {
@@ -45,7 +46,7 @@ Once done, `.coda-credentials.json` file will be generated. Make sure you edit t
 
 ### Running Commands Locally
 
-Here is an example on how to test formulas locally: 
+Here is an example on how to test formulas locally:
 
 ```bash
 # Formula: Question
@@ -64,14 +65,20 @@ npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questio
 
 ## Experimenting with Stack Overflow API with Postman
 
-you can experiment with [Stack Overflow API](https://api.stackexchange.com/) with Postment by forking the collection in the button below. Keep in mind that you must have the following environment variables to run the requests in the collection: 
- 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53?action=collection%2Ffork&collection-url=entityId%3D2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53%26entityType%3Dcollection%26workspaceId%3Dce07deaf-31f3-40f0-90c5-4f8800bdbbd0)
+
+You can experiment with [Stack Overflow API](https://api.stackexchange.com/) with Postment by forking the collection in the button below. Keep in mind that you must have the following environment variables to run the requests in the collection:
+
 * `ClientId`
 * `ClientSecret`
 * `key`
 
-These values correspond to the Stack Exchange app created as shown below: 
+These values correspond to the Stack Exchange app created as shown below:
 
 ![Stack Exchange App](/assets/stack-exchange-app-screenshot.png)
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53?action=collection%2Ffork&collection-url=entityId%3D2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53%26entityType%3Dcollection%26workspaceId%3Dce07deaf-31f3-40f0-90c5-4f8800bdbbd0)
+Edit the Stack Exchange App such that for the OAuth Domain, the value should be `pstmn.io`
+
+Then, generate an access token by going to the collection settings under the Authorization tab and clicking `Get New Access Token`
+
+![Postman - Get Access Token](/assets/postmand-screenshot.png)
