@@ -67,17 +67,17 @@ npx coda execute pack.ts UndoBookmarkQuestion "https://stackoverflow.com/questio
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53?action=collection%2Ffork&collection-url=entityId%3D2866939-edf7c77c-a303-4a74-9208-d80eb7b82a53%26entityType%3Dcollection%26workspaceId%3Dce07deaf-31f3-40f0-90c5-4f8800bdbbd0)
 
-You can experiment with [Stack Overflow API](https://api.stackexchange.com/) with Postment by forking the collection in the button below. Keep in mind that you must have the following environment variables to run the requests in the collection:
+You can experiment with [Stack Overflow API](https://api.stackexchange.com/) with Postment by forking the collection in the button above. 
 
-* `ClientId`
-* `ClientSecret`
-* `key`
+* Keep in mind that you must have the following environment variables to run the requests in the collection:
+  * `ClientId`
+  * `ClientSecret`
+  * `key`
+* Edit the Stack Exchange App such that for the OAuth Domain, the value should be `pstmn.io`
 
 These values correspond to the Stack Exchange app created as shown below:
 
 ![Stack Exchange App](/assets/stack-exchange-app-screenshot.png)
-
-Edit the Stack Exchange App such that for the OAuth Domain, the value should be `pstmn.io`
 
 Then, generate an access token by going to the collection settings under the Authorization tab and clicking `Get New Access Token`
 
