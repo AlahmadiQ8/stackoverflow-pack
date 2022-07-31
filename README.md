@@ -1,19 +1,29 @@
-# Stack Overflow Coda Pack
+# Stack Overflow Coda Pack <!-- omit in toc -->
 
 This repo hosts the codebase for [Stack Overflow Coda Pack](https://coda.io/packs/stack-overflow-12829). The pack allows to work with data from [Stack Overflow](https://stackoverflow.com/) directly in your doc.
 
-# Running Locally
+---
+
+- [Running Locally](#running-locally)
+  - [Local Development in Docker Container](#local-development-in-docker-container)
+  - [Setup Stackoverflow Authentication](#setup-stackoverflow-authentication)
+- [Running Commands Locally](#running-commands-locally)
+- [Experimenting with Stack Overflow API with Postman](#experimenting-with-stack-overflow-api-with-postman)
+
+---
+
+## Running Locally
 
 See [Get started on your local machine](https://coda.io/packs/build/latest/tutorials/get-started/cli/). However, I think it's easier to develop in the docker container as shown below.
 
 ### Local Development in Docker Container
 
-The easiest way to develop locally is to use the development docker container.
+1. Install [Docker](https://docs.docker.com/engine/install/)
+2. Install [VSCode Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
+3. Run the `Remote-Containers: Open Folder in Container...` command and select the local folder.
+4. A new VSCode window will launch where you can develop and run commands in a bash terminal.
 
-1. Install [VSCode Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
-2. Run the `Remote-Containers: Open Folder in Container...` command and select the local folder.
-
-A new VSCode window will launch where you can develop and run commands in a bash terminal.
+There's also an in-depth guide on how to develop coda packs with docker containers: https://github.com/AlahmadiQ8/coda-pack-local-dev
 
 ### Setup Stackoverflow Authentication
 
@@ -44,7 +54,7 @@ Once done, run `npx coda auth pack.ts`. It will ask you for the client id and cl
 }
 ```
 
-### Running Commands Locally
+## Running Commands Locally
 
 Here is an example on how to test formulas locally:
 
