@@ -52,7 +52,7 @@ export interface SeFilterQueryParameters {
 }
 
 export const enum SearchType {
-  EntireSite = "All stackoverflow",
+  EntireSite = "All Stack Overflow",
   MyBookmarks = "My bookmarks"
 }
 

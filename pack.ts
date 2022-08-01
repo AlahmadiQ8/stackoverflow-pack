@@ -9,7 +9,7 @@ export const pack = coda.newPack();
 
 pack.addNetworkDomain("stackexchange.com");
 
-// Setup per-user authentication using Stackoverflow's OAuth2.
+// Setup per-user authentication using Stack Overflow's OAuth2.
 // Remember to set your client ID and secret in the "Settings" tab.
 // See https://api.stackexchange.com/docs/authentication
 pack.setUserAuthentication({
@@ -22,12 +22,12 @@ pack.setUserAuthentication({
 
 pack.addFormula({
   name: "User", 
-  description: 'Get data about a stackoverflow user', 
+  description: 'Get data about a Stack Overflow user', 
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: 'username',
-      description: 'The username of the StackOverflow user.',
+      description: 'The username of the Stack Overflow user.',
     })
   ],
   resultType: coda.ValueType.Object,
@@ -204,7 +204,7 @@ pack.addSyncTable({
       coda.makeParameter({
         type: coda.ParameterType.String,
         name: 'SearchType',
-        description: 'Whether to SearchType entire questions on stackoverflow or only the current user\'s bookmarked questions. Note that `Tags Filter` will not work for `My bookmarks` option',
+        description: 'Whether to SearchType entire questions on Stack Overflow or only the current user\'s bookmarked questions. Note that `Tags Filter` will not work for `My bookmarks` option',
         suggestedValue: SearchType.EntireSite,  
         autocomplete: [SearchType.EntireSite, SearchType.MyBookmarks] 
       }),

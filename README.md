@@ -6,7 +6,7 @@ This repo hosts the codebase for [Stack Overflow Coda Pack](https://coda.io/pack
 
 - [Running Locally](#running-locally)
   - [Local Development in Docker Container](#local-development-in-docker-container)
-  - [Setup Stackoverflow Authentication](#setup-stackoverflow-authentication)
+  - [Setup Stack Overflow Authentication](#setup-stackoverflow-authentication)
 - [Running Commands Locally](#running-commands-locally)
 - [Experimenting with Stack Overflow API with Postman](#experimenting-with-stack-overflow-api-with-postman)
 
@@ -25,7 +25,7 @@ See [Get started on your local machine](https://coda.io/packs/build/latest/tutor
 
 There's also an in-depth guide on how to develop coda packs with docker containers: https://github.com/AlahmadiQ8/coda-pack-local-dev
 
-### Setup Stackoverflow Authentication
+### Setup Stack Overflow Authentication
 
 You need to have a client id and client secret to enable the pack to use the Stack Overflow API.
 
@@ -63,7 +63,7 @@ Here is an example on how to test formulas locally:
 npx coda execute pack.ts Question https://stackoverflow.com/questions/72913818/how-to-access-my-sprite-properties-from-outside-a-function-in-phaser3-and-matter
 
 # Sync Table:
-npx coda execute pack.ts Questions "All stackoverflow" "2022-02-01,2022-05-01" "false" "reactjs,nextjs,vercel"
+npx coda execute pack.ts Questions "All Stack Overflow" "2022-02-01,2022-05-01" "false" "reactjs,nextjs,vercel"
 npx coda execute pack.ts Questions "My bookmarks" "" "false" "reactjs"
 
 # Bookmark Question

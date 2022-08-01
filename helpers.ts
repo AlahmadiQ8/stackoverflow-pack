@@ -51,7 +51,7 @@ export async function getQuestion([url]: [string], context: coda.ExecutionContex
 }
 
 /** 
- * Fetches data about a stackoverflow user
+ * Fetches data about a Stack Overflow user
  */
 export async function getUser([username]: [string], context: coda.ExecutionContext) {
 
@@ -275,8 +275,8 @@ export function addOrSubstractDays(startingDate: Date, numberOfDays: number) {
 }
 
 /**
- * extracts question id from stackoverflow url
- * @param url stackoverflow url
+ * extracts question id from Stack Overflow url
+ * @param url Stack Overflow url
  * @returns object containing question id
  */
 function parseQuestionUrl(url: string): { id: string } {

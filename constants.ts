@@ -1,6 +1,6 @@
 
 /**
- * stackoverflow filter to include and exlude response fields. 
+ * Stack Overflow filter to include and exlude response fields. 
  * This is generated statically. This is generated statically using /filters/create
  * See https://api.stackexchange.com/docs/filters for more info
  * To see what fields included, try GET https://api.stackexchange.com/2.3/filters/!4kiSra10*uOIiKTB*9dZ2QjFa 
@@ -8,7 +8,7 @@
 export const filter = '!*ZXu3M2yogA((is9W7YpZB3w';
 
 /**
- * stackoverflow filter to include and exlude response fields. 
+ * Stack Overflow filter to include and exlude response fields. 
  * This is generated statically. This is generated statically using /filters/create
  * The only different to {@link filter} is that this one includes question.body_markdown field
  * We have this in case the pack consumer wants to include the question body when syncing cable
@@ -31,7 +31,7 @@ export const seKey = '0z9mHguI53wsnmgPMUFN6A((';
 export const defaultPageSize = 100;
 
 /**
- * Regex for matching stackoverflow question url
+ * Regex for matching Stack Overflow question url
  * it encapsulates the question id in a regex group to be extracted
  */
 export const questionUrlRegex = new RegExp("^https://stackoverflow.com/questions/([^/]+)/[^/]+");
